@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -13,6 +14,8 @@ class MqttManager {
   static final MqttManager _instance = MqttManager._();
 
   MqttManager._();
+
+  final _tag = "MqttManager";
 
   static MqttManager getInstance() => _instance;
 
@@ -44,19 +47,16 @@ class MqttManager {
     try {
       await _client?.connect();
     } catch (e) {
-      print('Exception: $e');
+      log('Exception: $e',name: "$_tag");
       _client?.disconnect();
     }
 
     _client?.updates?.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       final MqttPublishMessage message = c[0].payload as MqttPublishMessage;
-      // final payload =
-      //     MqttPublishPayload.bytesToStringAsString(message.payload.message);
+      final payload =
+          MqttPublishPayload.bytesToStringAsString(message.payload.message);
 
-      Utf8Decoder utf8decoder = new Utf8Decoder();
-      String payload = utf8decoder.convert(message.payload.message);
-
-      print('Received message:$payload from topic: ${c[0].topic}>');
+      log('Received message:$payload from topic: ${c[0].topic}>',name: '$_tag');
     });
 
     return _client;
@@ -76,37 +76,37 @@ class MqttManager {
 
   // 连接成功
   void onConnected() {
-    print('Connected');
+    log('Connected',name: '$_tag');
     try{
       _client?.subscribe("topic/test", MqttQos.atLeastOnce);
     }catch(e){
-      print(e.toString());
+      log(e.toString(),name: '$_tag');
     }
 
   }
 
   // 连接断开
   void onDisconnected() {
-    print('Disconnected');
+    log('Disconnected',name: '$_tag');
   }
 
   // 订阅主题成功
   void onSubscribed(String topic) {
-    print('Subscribed topic: $topic');
+    log('Subscribed topic: $topic',name: '$_tag');
   }
 
   // 订阅主题失败
   void onSubscribeFail(String topic) {
-    print('Failed to subscribe $topic');
+    log('Failed to subscribe $topic',name: '$_tag');
   }
 
   // 成功取消订阅
   void onUnsubscribed(String? topic) {
-    print('Unsubscribed topic: $topic');
+    log('Unsubscribed topic: $topic',name: '$_tag');
   }
 
   // 收到 PING 响应
   void pong() {
-    print('Ping response client callback invoked');
+    log('Ping response client callback invoked',name: '$_tag');
   }
 }
