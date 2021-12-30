@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_article_examples/image_examples/image_examples_page.dart';
 import 'package:flutter_article_examples/mqtt_examples/mqtt_examples_page.dart';
 
 void main() {
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MqttExamplesPage(),
+      home: ImageExamplesPage(),
     );
   }
 }
